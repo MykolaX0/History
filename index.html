@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Скульптура к. XVIII – п. ХХ ст.</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #111;
+      color: #f5f5f5;
+      overflow-x: hidden;
+    }
+
+    .slides {
+      width: 100%;
+    }
+
+    .slide {
+      min-height: 100vh;
+      padding: 90px 8%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 50px;
+      position: relative;
+      background: linear-gradient(135deg, #111, #222);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .slide:nth-child(even) {
+      background: linear-gradient(135deg, #1a1a1a, #2b2118);
+    }
+
+    .content {
+      max-width: 650px;
+      z-index: 2;
+    }
+
+    .small-title {
+      color: #d5a45f;
+      font-size: 18px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    h1 {
+      font-size: clamp(40px, 6vw, 78px);
+      line-height: 1.05;
+      margin-bottom: 25px;
+    }
+
+    h2 {
+      font-size: clamp(32px, 4vw, 54px);
+      margin-bottom: 22px;
+      color: #fff;
+    }
+
+    p {
+      font-size: 20px;
+      line-height: 1.65;
+      color: #ddd;
+      margin-bottom: 18px;
+    }
+
+    ul {
+      margin-left: 22px;
+      margin-top: 15px;
+    }
+
+    li {
+      font-size: 19px;
+      line-height: 1.6;
+      color: #ddd;
+      margin-bottom: 8px;
+    }
+
+    .image-card {
+      width: min(520px, 100%);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 25px 70px rgba(0,0,0,0.45);
+      z-index: 2;
+    }
+
+    .image-card img {
+      width: 100%;
+      height: 430px;
+      object-fit: cover;
+      display: block;
+      filter: contrast(1.05) saturate(0.95);
+    }
+
+    .caption {
+      padding: 14px 18px;
+      font-size: 15px;
+      color: #ccc;
+      background: rgba(0,0,0,0.25);
+    }
+
+    .hero {
+      text-align: center;
+      flex-direction: column;
+      background:
+        linear-gradient(rgba(0,0,0,0.58), rgba(0,0,0,0.75)),
+        url("https://images.unsplash.com/photo-1561839561-b13bcfe95249?auto=format&fit=crop&w=1600&q=80");
+      background-size: cover;
+      background-position: center;
+    }
+
+    .hero .content {
+      max-width: 900px;
+    }
+
+    .hero p {
+      max-width: 850px;
+      margin: 0 auto 25px;
+      font-size: 22px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 14px 28px;
+      border-radius: 999px;
+      background: #d5a45f;
+      color: #111;
+      text-decoration: none;
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+      font-size: 17px;
+      transition: 0.25s;
+    }
+
+    .btn:hover {
+      background: #f0c987;
+      transform: translateY(-2px);
+    }
+
+    .nav-buttons {
+      position: fixed;
+      right: 25px;
+      bottom: 25px;
+      display: flex;
+      gap: 12px;
+      z-index: 10;
+    }
+
+    .nav-buttons button {
+      border: none;
+      padding: 13px 18px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.18);
+      font-weight: 700;
+      transition: 0.25s;
+    }
+
+    .nav-buttons button:hover {
+      background: #d5a45f;
+      color: #111;
+    }
+
+    .progress {
+      position: fixed;
+      left: 22px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      border: 1px solid rgba(255,255,255,0.35);
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    .dot.active {
+      background: #d5a45f;
+      transform: scale(1.35);
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-top: 25px;
+    }
+
+    .time-item {
+      padding: 20px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 18px;
+    }
+
+    .time-item strong {
+      color: #d5a45f;
+      display: block;
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+
+    .time-item span {
+      color: #ddd;
+      line-height: 1.5;
+      display: block;
+    }
+
+    .number {
+      position: absolute;
+      top: 35px;
+      left: 8%;
+      color: rgba(255,255,255,0.12);
+      font-size: 80px;
+      font-weight: 900;
+    }
+
+    @media (max-width: 900px) {
+      .slide {
+        flex-direction: column;
+        padding: 80px 7%;
+        text-align: left;
+      }
+
+      .image-card img {
+        height: 300px;
+      }
+
+      .progress {
+        display: none;
+      }
+
+      .timeline {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-buttons {
+        right: 12px;
+        bottom: 12px;
+      }
+
+      .nav-buttons button {
+        padding: 11px 14px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="progress" id="progress"></div>
+
+  <div class="slides">
+
+    <!-- Слайд 1 -->
+    <section class="slide hero" id="slide-1">
+      <div class="content">
+        <div class="small-title">Презентаційний сайт</div>
+        <h1>Скульптура кінця XVIII – початку ХХ століття</h1>
+        <p>
+          Період від неокласицизму до модерну та авангарду: як скульптура перейшла
+          від ідеальної античної краси до емоційної, реалістичної та експериментальної форми.
+        </p>
+        <button class="btn" onclick="goToSlide(1)">Почати перегляд</button>
+      </div>
+    </section>
+
+    <!-- Слайд 2 -->
+    <section class="slide" id="slide-2">
+      <div class="number">01</div>
+      <div class="content">
+        <div class="small-title">Історичний контекст</div>
+        <h2>Що змінило скульптуру?</h2>
+        <p>
+          Кінець XVIII — початок ХХ століття був часом великих змін: революції,
+          розвиток міст, національні рухи, індустріалізація, поява нових музеїв і академій.
+        </p>
+        <ul>
+          <li>Скульптура стала частиною міського простору: пам’ятники, площі, фасади.</li>
+          <li>Митці поступово відходили від суворих академічних правил.</li>
+          <li>З’явився інтерес до психології людини, руху, фактури та особистих переживань.</li>
+        </ul>
+      </div>
+      <div class="image-card">
+        <img src="https://images.unsplash.com/photo-1554907984-15263bfd63bd?auto=format&fit=crop&w=1200&q=80" alt="Скульптури в музеї">
+        <div class="caption">Музейна скульптура як частина культури ХІХ століття</div>
+      </div>
+    </section>
+
+    <!-- Слайд 3 -->
+    <section class="slide" id="slide-3">
+      <div class="number">02</div>
+      <div class="content">
+        <div class="small-title">Неокласицизм</div>
+        <h2>Повернення до античної гармонії</h2>
+        <p>
+          Наприкінці XVIII століття популярним став неокласицизм. Скульптори
+          зверталися до мистецтва Давньої Греції та Риму, прагнули спокою,
+          рівноваги, ідеальної краси тіла.
+        </p>
+        <ul>
+          <li>Чіткі контури та гладка поверхня мармуру.</li>
+          <li>Ідеалізовані постаті, міфологічні сюжети.</li>
+          <li>Відомі майстри: Антоніо Канова, Бертель Торвальдсен.</li>
+        </ul>
+      </div>
+      <div class="image-card">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Antonio%20Canova%20-%20Psyche%20Revived%20by%20Cupid%27s%20Kiss%20-%20WGA03944.jpg" alt="Антоніо Канова">
+        <div class="caption">Антоніо Канова. «Амур і Психея» — приклад неокласицизму</div>
+      </div>
+    </section>
+
+    <!-- Слайд 4 -->
+    <section class="slide" id="slide-4">
+      <div class="number">03</div>
+      <div class="content">
+        <div class="small-title">Романтизм</div>
+        <h2>Емоції, рух і героїзм</h2>
+        <p>
+          У першій половині ХІХ століття романтизм приніс у скульптуру більше
+          драматизму. Замість спокійної античної рівноваги з’являються сильні
+          емоції, патріотичні образи, напружений рух.
+        </p>
+        <ul>
+          <li>Скульптура стає більш експресивною.</li>
+          <li>Поширюються монументи національним героям.</li>
+          <li>Композиції часто мають театральність і динаміку.</li>
+        </ul>
+      </div>
+      <div class="image-card">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/La%20Marseillaise%20by%20Fran%C3%A7ois%20Rude.jpg" alt="Франсуа Рюд Марсельєза">
+        <div class="caption">Франсуа Рюд. «Марсельєза» на Тріумфальній арці в Парижі</div>
+      </div>
+    </section>
+
+    <!-- Слайд 5 -->
+    <section class="slide" id="slide-5">
+      <div class="number">04</div>
+      <div class="content">
+        <div class="small-title">Реалізм</div>
+        <h2>Правдиве зображення людини</h2>
+        <p>
+          У другій половині ХІХ століття реалізм звернув увагу на звичайну людину,
+          працю, соціальні теми. Скульптори прагнули показати не ідеал, а реальне
+          життя — з втомою, силою, характером.
+        </p>
+        <ul>
+          <li>Героями творів стають робітники, селяни, містяни.</li>
+          <li>Форма стає менш ідеалізованою.</li>
+          <li>Важливу роль відіграє психологічна виразність.</li>
+        </ul>
+      </div>
+      <div class="image-card">
+        <img src="https://images.unsplash.com/photo-1544967882-28d4cc052b39?auto=format&fit=crop&w=1200&q=80" alt="Скульптура людини">
+        <div class="caption">Реалістична скульптура більше зверталася до життя звичайної людини</div>
+      </div>
+    </section>
+
+    <!-- Слайд 6 -->
+    <section class="slide" id="slide-6">
+      <div class="number">05</div>
+      <div class="content">
+        <div class="small-title">Оґюст Роден</div>
+        <h2>Скульптура стає живою</h2>
+        <p>
+          Оґюст Роден — один із найважливіших скульпторів кінця ХІХ століття.
+          Він змінив уявлення про скульптуру: поверхня його робіт ніби «дихає»,
+          фігури передають внутрішній стан, а не лише зовнішню красу.
+        </p>
+        <ul>
+          <li>Нерівна фактура створює ефект живого руху.</li>
+          <li>Образи часто напружені, психологічні, драматичні.</li>
+          <li>Відомі твори: «Мислитель», «Поцілунок», «Громадяни Кале».</li>
+        </ul>
+      </div>
+      <div class="image-card">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/The%20Thinker%2C%20Rodin.jpg" alt="Оґюст Роден Мислитель">
+        <div class="caption">Оґюст Роден. «Мислитель» — символ філософського пошуку</div>
+      </div>
+    </section>
+
+    <!-- Слайд 7 -->
+    <section class="slide" id="slide-7">
+      <div class="number">06</div>
+      <div class="content">
+        <div class="small-title">Модерн і символізм</div>
+        <h2>Пластика, лінія, настрій</h2>
+        <p>
+          На межі ХІХ–ХХ століть у мистецтві поширюється модерн. Скульптура
+          стає декоративнішою, плавнішою, більше уваги приділяється лінії,
+          силуету, настрою та символічному змісту.
+        </p>
+        <ul>
+          <li>Плавні вигнуті форми, декоративність.</li>
+          <li>Поєднання скульптури з архітектурою та інтер’єром.</li>
+          <li>Серед важливих імен — Камілла Клодель, Антуан Бурдель, Арістид Майоль.</li>
+        </ul>
+      </div>
+      <div class="image-card">
+        <img src="https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&w=1200&q=80" alt="Декоративна скульптура">
+        <div class="caption">У модерні скульптура часто мала декоративний і символічний характер</div>
+      </div>
+    </section>
+
+    <!-- Слайд 8 -->
+    <section class="slide" id="slide-8">
+      <div class="number">07</div>
+      <div class="content">
+        <div class="small-title">Початок ХХ століття</div>
+        <h2>Крок до авангарду</h2>
+        <p>
+          На початку ХХ століття скульптори почали спрощувати форму, відходити
+          від точного копіювання натури. З’являється інтерес до геометрії,
+          конструкції, чистого об’єму.
+        </p>
+        <ul>
+          <li>Фігура людини може бути умовною, узагальненою.</li>
+          <li>Матеріали та форма стають важливішими за сюжет.</li>
+          <li>Важливі митці: Константін Бранкузі, Олександр Архипенко.</li>
+        </ul>
+      </div>
+      <div class="image-card">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Alexander%20Archipenko%20-%20Woman%20Combing%20Her%20Hair.jpg" alt="Олександр Архипенко">
+        <div class="caption">Олександр Архипенко — один із новаторів скульптури ХХ століття</div>
+      </div>
+    </section>
+
+    <!-- Слайд 9 -->
+    <section class="slide" id="slide-9">
+      <div class="number">08</div>
+      <div class="content">
+        <div class="small-title">Український контекст</div>
+        <h2>Скульптура в Україні та митці українського походження</h2>
+        <p>
+          У ХІХ столітті на українських землях розвивалася академічна та
+          монументальна скульптура. Важливими були пам’ятники, надгробна пластика,
+          портрети, декоративні елементи архітектури.
+        </p>
+        <ul>
+          <li>Скульптура часто пов’язувалася з міським простором і меморіальною культурою.</li>
+          <li>На межі ХХ століття митці активно шукали нові форми.</li>
+          <li>Олександр Архипенко, народжений у Києві, став одним із провідних авангардистів у світовій скульптурі.</li>
+        </ul>
+      </div>
+      <div class="image-card">
+        <img src="https://images.unsplash.com/photo-1601042879364-f3947d3f9c16?auto=format&fit=crop&w=1200&q=80" alt="Міська скульптура">
+        <div class="caption">Міська скульптура була важливою частиною культурного простору ХІХ століття</div>
+      </div>
+    </section>
+
+    <!-- Слайд 10 -->
+    <section class="slide" id="slide-10">
+      <div class="number">09</div>
+      <div class="content" style="max-width: 1000px;">
+        <div class="small-title">Підсумок</div>
+        <h2>Головні етапи розвитку</h2>
+        <p>
+          Скульптура кінця XVIII — початку ХХ століття пройшла шлях від
+          ідеалізованої античної краси до експресивної, психологічної та
+          експериментальної форми.
+        </p>
+
+        <div class="timeline">
+          <div class="time-item">
+            <strong>Кінець XVIII ст.</strong>
+            <span>Неокласицизм: гармонія, античність, ідеальна форма.</span>
+          </div>
+          <div class="time-item">
+            <strong>Перша пол. ХІХ ст.</strong>
+            <span>Романтизм: емоції, героїзм, національні образи.</span>
+          </div>
+          <div class="time-item">
+            <strong>Друга пол. ХІХ ст.</strong>
+            <span>Реалізм і Роден: життя, психологія, фактура.</span>
+          </div>
+          <div class="time-item">
+            <strong>Початок ХХ ст.</strong>
+            <span>Модерн і авангард: спрощення, символізм, нові форми.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="nav-buttons">
+    <button onclick="prevSlide()">← Попередній</button>
+    <button onclick="nextSlide()">Наступний →</button>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll(".slide");
+    const progress = document.getElementById("progress");
+    let currentSlide = 0;
+
+    // Створення крапок прогресу
+    slides.forEach((slide, index) => {
+      const dot = document.createElement("div");
+      dot.classList.add("dot");
+      dot.onclick = () => goToSlide(index);
+      progress.appendChild(dot);
+    });
+
+    const dots = document.querySelectorAll(".dot");
+
+    function updateDots() {
+      dots.forEach(dot => dot.classList.remove("active"));
+      if (dots[currentSlide]) {
+        dots[currentSlide].classList.add("active");
+      }
+    }
+
+    function goToSlide(index) {
+      if (index < 0) index = 0;
+      if (index >= slides.length) index = slides.length - 1;
+
+      currentSlide = index;
+      slides[currentSlide].scrollIntoView({ behavior: "smooth" });
+      updateDots();
+    }
+
+    function nextSlide() {
+      goToSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+      goToSlide(currentSlide - 1);
+    }
+
+    // Оновлення активного слайда під час прокрутки
+    window.addEventListener("scroll", () => {
+      let closest = 0;
+      let closestDistance = Infinity;
+
+      slides.forEach((slide, index) => {
+        const rect = slide.getBoundingClientRect();
+        const distance = Math.abs(rect.top);
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closest = index;
+        }
+      });
+
+      currentSlide = closest;
+      updateDots();
+    });
+
+    updateDots();
+
+    // Якщо якась картинка з Wikimedia не завантажиться — ставимо запасну
+    document.querySelectorAll("img").forEach(img => {
+      img.addEventListener("error", () => {
+        img.src = "https://images.unsplash.com/photo-1544967882-28d4cc052b39?auto=format&fit=crop&w=1200&q=80";
+      });
+    });
+  </script>
+
+</body>
+</html>
